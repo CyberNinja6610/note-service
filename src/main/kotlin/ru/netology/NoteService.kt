@@ -7,10 +7,11 @@ object NoteService : CRUDService<Note> {
     fun reset() {
         uniqueId = 0;
         items = mutableListOf();
+        CommentService.reset();
     }
 
     private fun getNextId(): Int {
-        return uniqueId++;
+        return ++uniqueId;
     }
 
     override fun add(element: Note): Note {
@@ -20,7 +21,7 @@ object NoteService : CRUDService<Note> {
     }
 
     override fun getAll(): Collection<Note> {
-        return items.filterIndexed { index, item -> !item.isDeleted }
+        return items
     }
 
     override fun getById(id: Int): Note? {

@@ -10,7 +10,7 @@ object CommentService : CRUDServiceRestorable<Comment> {
     }
 
     private fun getNextId(): Int {
-        return uniqueId++;
+        return ++uniqueId;
     }
 
     override fun add(element: Comment): Comment {
@@ -21,7 +21,7 @@ object CommentService : CRUDServiceRestorable<Comment> {
     }
 
     override fun getAll(): Collection<Comment> {
-        return items.filterIndexed { index, item -> !item.isDeleted }
+        return items
     }
 
     fun getByNoteId(noteId: Int): Collection<Comment> {
@@ -49,9 +49,9 @@ object CommentService : CRUDServiceRestorable<Comment> {
     }
 
     override fun restore(id: Int): Comment {
-        val curElement = getById(id) ?: throw CommentNotFoundException(id);
+        val curElement = items.firstOrNull { item -> item.id == id } ?: throw CommentNotFoundException(id);
         val index = items.indexOf(curElement)
-        val newElement = curElement.copy(isDeleted = true);
+        val newElement = curElement.copy(isDeleted = false);
         items[index] = newElement
         return newElement;
     }
